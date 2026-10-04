@@ -40,3 +40,22 @@ Cuando el Servidor coloca sus barcos, envía una señal al Cliente informando qu
     - Si el tiro no acertó, el Cliente entra en modo receptor read() en espera de las jugadas del Servidor
 
 El juego termina cuando el Cliente o el Servidor emitan un 3 como código de respuesta
+
+### Cascarón de prueba
+`Servidor/ServidorBattleShips.java` implementa un servidor mínimo para probar el protocolo
+del cliente. Por defecto escucha en el puerto `5000`; también puede recibir el puerto como
+primer argumento:
+
+```text
+java -cp Servidor ServidorBattleShips 5000
+```
+
+Después de recibir el código `99`, responde con `100`. Para probar las respuestas de ataque,
+el cliente debe enviar las coordenadas como dos enteros (`x` y después `y`). El cascarón
+reserva estas coordenadas:
+- `[0,0]`: código `0` (agua)
+- `[1,1]`: código `1` (impacto)
+- `[2,2]`: código `2` e ID de barco `0` (hundido)
+- `[3,3]`: código `3` e ID de barco `0` (victoria)
+
+Las demás coordenadas válidas del tablero `10x10` responden con código `0`.
