@@ -11,6 +11,11 @@ El servidor responde con un estado dependiendo del resultado:
 
 El servidor también responderá con el ID del barco golpeado en caso de que la respuesta inicial sea 2 o 3.
 
+### Código de cambio de fase
+El Cliente y el Servidor se comunicarán para cambiar de la fase de Colocación a la de Ataque:
+- Código 99: El Cliente envía este código al indicar que ya colocó sus naves.
+- Código 100: El Servidor envía este código para indicar que ya colocó sus naves y se cambiará a la fase de Ataque
+
 ### Barcos
 El tablero consta de una cuadrícula de 10x10 bloques, donde se repartirán 6 barcos en total:
 - 1 barco de 2x5 [ID: 0]
@@ -33,5 +38,5 @@ Cuando el Servidor coloca sus barcos, envía una señal al Cliente informando qu
 3. Dependiendo del resultado del tiro, el Servidor devuelve el código de respuesta al Cliente. En caso de que el código de respuesta sea 2 o 3, se enviará el ID del barco correspondiente al tiro para renderizar el barco hundido.
     - Si el tiro acertó a un barco, el jugador continua jugando.
     - Si el tiro no acertó, el Cliente entra en modo receptor read() en espera de las jugadas del Servidor
-    
+
 El juego termina cuando el Cliente o el Servidor emitan un 3 como código de respuesta
