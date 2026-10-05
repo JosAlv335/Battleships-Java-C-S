@@ -6,8 +6,6 @@ public class Ataque implements Serializable {
     
     public int x;
     public int y;
-    public int codigoRespuesta;
-    public int idBarco;
     
     public Ataque(int x, int y) {
         this.x = x;
