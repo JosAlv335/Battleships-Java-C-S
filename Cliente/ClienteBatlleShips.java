@@ -2,11 +2,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 public class ClienteBatlleShips {
     private Socket socket;
-    private DataInputStream entrada;
-    private DataOutputStream salida;
+    // Obtención de flujos orientados a byte para objetos
+    private ObjectOutputStream salida;
+    private ObjectInputStream entrada;
 
     // Códigos de señalización de estado de fase de juego
     private final int SIGNAL_LISTO = 99;
@@ -17,9 +19,10 @@ public class ClienteBatlleShips {
             // Crea un socket de flujo y lo conecta al puerto en la IP definida
             socket = new Socket(ip, puerto);
             
-            // Obtención de flujos orientados a byte
-            entrada = new DataInputStream(socket.getInputStream());
-            salida = new DataOutputStream(socket.getOutputStream());
+            // Obtención de flujos de entrada y salida para objetos
+            salida = new ObjectOutputStream(socket.getOutputStream());
+            salida.flush(); // Primero se hace flush por obligación del ObjectOutputStream para evitar problemas de bloqueo
+            entrada = new ObjectInputStream(socket.getInputStream());
             
             System.out.println("Conectado al servidor.");
             
@@ -41,15 +44,14 @@ public class ClienteBatlleShips {
     }
 
     /**
-     * Envía al servidor las coordenadas del ataque del jugador
+     * Envía el ataque del jugador al servidor
      * @param x
      * @param y
      * @throws IOException
      */
-    public synchronized void enviarCoordenada(int x, int y) throws IOException {
-        asegurarConectado();
-        salida.writeInt(x);
-        salida.writeInt(y);
+    public synchronized void enviarAtaque(int x, int y) throws IOException {
+        Ataque attack = new Ataque(x, y);
+        salida.writeObject(attack);
         salida.flush();
     }
 
@@ -60,7 +62,7 @@ public class ClienteBatlleShips {
      */
     public synchronized void enviarRespuesta(int codigo) throws IOException {
         asegurarConectado();
-        salida.writeInt(codigo);
+        salida.writeObject(this);
         salida.flush();
     }
 
@@ -68,10 +70,11 @@ public class ClienteBatlleShips {
      * Lee la respuesta del servidor después de enviar las coordenadas del ataque.
      * @return El código de respuesta recibido del servidor.
      * @throws IOException
+     * @throws ClassNotFoundException 
      */
-    public int leerRespuesta() throws IOException {
+    public int leerRespuesta() throws IOException, ClassNotFoundException {
         asegurarConectado();
-        return entrada.readInt();
+        return entrada.readObject() instanceof Respuesta ? ((Respuesta) entrada.readObject()).codigoEstado : -1;
     }
 
     /**
