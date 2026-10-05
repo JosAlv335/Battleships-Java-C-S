@@ -332,7 +332,7 @@ public class TableroCliente extends JFrame {
             ultimoAtaqueY = y;
             radar[x][y].setEnabled(false);
             radarHabilitado = false;
-            redCliente.enviarCoordenada(x, y);
+            redCliente.enviarAtaque(x, y);
         } catch (IOException e) {
             radar[x][y].setEnabled(true);
             radarHabilitado = true;
@@ -445,6 +445,8 @@ public class TableroCliente extends JFrame {
                 }
             } catch (IOException e) {
                 SwingUtilities.invokeLater(() -> mostrarError("La conexión con el servidor terminó", e));
+            } catch (ClassNotFoundException ex) {
+                System.getLogger(TableroCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
         }
 
