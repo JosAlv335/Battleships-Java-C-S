@@ -1,3 +1,5 @@
+package Cliente;
+
 public class MainCliente {
     public static void main(String[] args) {
         // Clase que maneja la comunicación con el servidor
@@ -18,7 +20,7 @@ public class MainCliente {
             });
         }else{
             System.err.println("No se pudo conectar al servidor. Por favor, verifica que el servidor esté en ejecución y que la IP/puerto sean correctos.");
-            System.err.println("Cerrando conexión...");
+                System.err.println("Cerrando conexión...");
             redCliente.cerrarConexion(); // Cierra la conexión si no se pudo establecer
         }
 
